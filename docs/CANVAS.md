@@ -1,6 +1,12 @@
 # LoginGuard — canvas de uma página
 
-**Grupo:** PREENCHER • **Componentes (nome completo e matrícula):** PREENCHER  
+**Grupo:** LoginGuard.
+
+**Componentes (nome completo e matrícula):**
+- Luid Moura Santana - matrícula 262070177.
+- Alex Gabriel Alves Dos Santos - matrícula 241070261.
+- Filipe Alves Ferreira Rocha - matrícula 222700092.
+- Gustavo Muniz dos Anjos - matrícula 241070612.  
 **Disciplina:** Segurança e Otimização de Banco de Dados
 
 | Elemento | Proposta |

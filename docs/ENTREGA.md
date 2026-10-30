@@ -1,7 +1,11 @@
 # LoginGuard — gestão de contas e acessos
 
 **Grupo:** LoginGuard.  
-**Componentes:** PREENCHER nome completo e matrícula de cada integrante.  
+**Componentes:**
+- Luid Moura Santana - matrícula 262070177.
+- Alex Gabriel Alves Dos Santos - matrícula 241070261.
+- Filipe Alves Ferreira Rocha - matrícula 222700092.
+- Gustavo Muniz dos Anjos - matrícula 241070612.  
 **Disciplina:** Segurança e Otimização de Banco de Dados.  
 **Repositório:** https://github.com/Guztaver/loginguard-bd (privado; requer acesso para avaliação).
 
@@ -96,7 +100,7 @@ Meta de investigação: reduzir leituras lógicas das consultas sem mudar o resu
 ## 7. Cronograma e pendências reais
 **Semana 1:** executar criação/carga, validar os três papéis e registrar o modelo. **Semana 2:** implementar terminal, Argon2id e acesso parametrizado, com gravação restrita de tentativas. **Semana 3:** executar ataques de teste, medir consultas e consolidar documentação.
 
-Na preparação inicial, o SQL Express foi encontrado parado e o Windows negou seu início. Portanto, os scripts ainda não foram validados em execução, a base não está comprovadamente carregada e a tabela de evidências permanece pendente. Para cumprir a entrega inicial, executar em uma instância de laboratório autorizada e anexar a saída. Preencher identificação e garantir acesso do professor ao repositório privado antes do envio individual. O prazo informado na atividade foi 27/10.
+Na preparação inicial, o SQL Express foi encontrado parado e o Windows negou seu início. A nova tentativa de conexão em 30/10/2026 também falhou, com o serviço parado. Portanto, os scripts ainda não foram validados em execução, a base não está comprovadamente carregada e a tabela de evidências permanece pendente. Para cumprir a entrega inicial, executar em uma instância de laboratório autorizada e anexar a saída. Garantir acesso do professor ao repositório privado antes do envio individual. O prazo informado na atividade foi 27/10.
 
 ## Referências técnicas
 - [Microsoft — DENY](https://learn.microsoft.com/en-us/sql/t-sql/statements/deny-transact-sql): regras e exceções de permissões.
