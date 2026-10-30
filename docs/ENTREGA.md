@@ -92,15 +92,19 @@ Meta de investigação: reduzir leituras lógicas das consultas sem mudar o resu
 
 | Evidência | Antes | Depois |
 |---|---|---|
-| Q1: leituras / mediana ms / plano | A medir | A medir |
-| Q2: leituras / mediana ms / plano | A medir | A medir |
-| Linhas em cada tabela | A registrar | A registrar |
-| Testes de permissão | A executar | A registrar |
+| Q1: leituras / mediana ms / plano | 1.064 / 17 ms / Clustered Index Scan + Sort | 3 / 4 ms / Index Seek no IX_Tentativa_Conta_Data |
+| Q2: leituras / mediana ms / plano | 1.064 / 24 ms / Clustered Index Scan + Hash Match + Sort | 626 / 29 ms / Index Seek no IX_Tentativa_Conta_Data + Stream Aggregate + Sort |
+| Linhas em cada tabela após carga de volume | 50 contas; 50 credenciais; 200.500 tentativas | Mesmas contagens |
+| Testes de permissão e mascaramento | Aprovados | Aprovados novamente |
+
+Execução em 30/10/2026 no SQL Server Express 2022, versão 16.0.1210.3. Cada consulta e fase teve um aquecimento e cinco amostras. Os resultados de Q1 e Q2 foram idênticos antes e depois dos índices. Os logs e quatro planos reais estão em `evidencias/`.
+
+Q1 melhorou tanto em leituras quanto em tempo. Q2 teve menos leituras, mas a mediana de tempo aumentou de 24 para 29 ms nesta execução; portanto, não se afirma ganho de velocidade para Q2. O otimizador escolheu o índice por conta, não o índice filtrado proposto. A escolha e o efeito do índice filtrado ainda poderão ser estudados no desenvolvimento do MVP. Os tempos curtos e a atividade concorrente do computador limitam a comparação; não foi limpo o cache global.
 
 ## 7. Cronograma e pendências reais
 **Semana 1:** executar criação/carga, validar os três papéis e registrar o modelo. **Semana 2:** implementar terminal, Argon2id e acesso parametrizado, com gravação restrita de tentativas. **Semana 3:** executar ataques de teste, medir consultas e consolidar documentação.
 
-Na preparação inicial, o SQL Express foi encontrado parado e o Windows negou seu início. A nova tentativa de conexão em 30/10/2026 também falhou, com o serviço parado. Portanto, os scripts ainda não foram validados em execução, a base não está comprovadamente carregada e a tabela de evidências permanece pendente. Para cumprir a entrega inicial, executar em uma instância de laboratório autorizada e anexar a saída. Garantir acesso do professor ao repositório privado antes do envio individual. O prazo informado na atividade foi 27/10.
+Em 30/10/2026, após autorização do usuário e confirmação administrativa do Windows, foi iniciado o serviço SQL Server já instalado. A base inicial foi criada e carregada, o volume foi gerado, os testes de segurança passaram e os índices e consultas foram executados. Não foi necessário concluir nenhuma instalação adicional nem reiniciar o computador. O terminal e a autenticação são componentes futuros do MVP, não requisitos executados nesta entrega inicial de BD. Garantir acesso do professor ao repositório privado antes do envio individual. O prazo informado na atividade foi 27/10.
 
 ## Referências técnicas
 - [Microsoft — DENY](https://learn.microsoft.com/en-us/sql/t-sql/statements/deny-transact-sql): regras e exceções de permissões.

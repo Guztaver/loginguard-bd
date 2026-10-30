@@ -51,9 +51,9 @@ def main():
         if source is None:
             source = TMP / (name + '.sql')
             source.write_text(sql, encoding='utf-8')
-        command = [sqlcmd, '-S', args.server, '-E', '-d', database,
+        command = [sqlcmd, '-S', args.server, '-E', '-I', '-d', database,
                    '-l', '10', '-t', '120', '-b', '-V', '16', '-f', '65001',
-                   '-w', '65535', '-y', '0', '-h', '-1', '-i', str(source)]
+                   '-w', '65535', '-y', '0', '-i', str(source)]
         start = time.perf_counter()
         result = subprocess.run(command, stdout=subprocess.PIPE, stderr=subprocess.STDOUT,
                                 timeout=150, check=False)

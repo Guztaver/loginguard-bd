@@ -1,0 +1,236 @@
+{
+  "executado_em_utc": "2026-10-30T18:17:10.769544+00:00",
+  "banco": "LoginGuardAcademico",
+  "versao_edicao": "16.0.1210.3 Express Edition (64-bit)",
+  "contas": 50,
+  "credenciais": 50,
+  "tentativas_iniciais": 500,
+  "tentativas_finais": 200500,
+  "carga_adicional_wall_ms": null,
+  "testes_permissoes": "aprovados",
+  "resultados_consultas_identicos": true,
+  "medicoes": {
+    "antes": {
+      "Q1": {
+        "aquecimento": {
+          "leituras_logicas": 1064,
+          "cpu_ms": 0,
+          "elapsed_sql_ms": 18,
+          "wall_sqlcmd_ms": 204.443
+        },
+        "amostras": [
+          {
+            "leituras_logicas": 1064,
+            "cpu_ms": 15,
+            "elapsed_sql_ms": 16,
+            "wall_sqlcmd_ms": 184.264
+          },
+          {
+            "leituras_logicas": 1064,
+            "cpu_ms": 0,
+            "elapsed_sql_ms": 17,
+            "wall_sqlcmd_ms": 186.771
+          },
+          {
+            "leituras_logicas": 1064,
+            "cpu_ms": 0,
+            "elapsed_sql_ms": 18,
+            "wall_sqlcmd_ms": 208.872
+          },
+          {
+            "leituras_logicas": 1064,
+            "cpu_ms": 16,
+            "elapsed_sql_ms": 17,
+            "wall_sqlcmd_ms": 197.083
+          },
+          {
+            "leituras_logicas": 1064,
+            "cpu_ms": 0,
+            "elapsed_sql_ms": 11,
+            "wall_sqlcmd_ms": 121.48
+          }
+        ],
+        "mediana_leituras_logicas": 1064,
+        "mediana_cpu_ms": 0,
+        "mediana_elapsed_sql_ms": 17,
+        "mediana_wall_sqlcmd_ms": 186.771,
+        "operadores": [
+          "Clustered Index Scan",
+          "Sort"
+        ],
+        "indices_no_plano": [
+          "[PK_TentativaLogin]"
+        ]
+      },
+      "Q2": {
+        "aquecimento": {
+          "leituras_logicas": 1064,
+          "cpu_ms": 0,
+          "elapsed_sql_ms": 33,
+          "wall_sqlcmd_ms": 232.211
+        },
+        "amostras": [
+          {
+            "leituras_logicas": 1064,
+            "cpu_ms": 16,
+            "elapsed_sql_ms": 23,
+            "wall_sqlcmd_ms": 211.326
+          },
+          {
+            "leituras_logicas": 1064,
+            "cpu_ms": 15,
+            "elapsed_sql_ms": 43,
+            "wall_sqlcmd_ms": 321.168
+          },
+          {
+            "leituras_logicas": 1064,
+            "cpu_ms": 16,
+            "elapsed_sql_ms": 15,
+            "wall_sqlcmd_ms": 132.46
+          },
+          {
+            "leituras_logicas": 1064,
+            "cpu_ms": 0,
+            "elapsed_sql_ms": 24,
+            "wall_sqlcmd_ms": 220.469
+          },
+          {
+            "leituras_logicas": 1064,
+            "cpu_ms": 0,
+            "elapsed_sql_ms": 24,
+            "wall_sqlcmd_ms": 216.84
+          }
+        ],
+        "mediana_leituras_logicas": 1064,
+        "mediana_cpu_ms": 15,
+        "mediana_elapsed_sql_ms": 24,
+        "mediana_wall_sqlcmd_ms": 216.84,
+        "operadores": [
+          "Clustered Index Scan",
+          "Hash Match",
+          "Sort"
+        ],
+        "indices_no_plano": [
+          "[PK_TentativaLogin]"
+        ]
+      }
+    },
+    "depois": {
+      "Q1": {
+        "aquecimento": {
+          "leituras_logicas": 3,
+          "cpu_ms": 0,
+          "elapsed_sql_ms": 2,
+          "wall_sqlcmd_ms": 196.914
+        },
+        "amostras": [
+          {
+            "leituras_logicas": 3,
+            "cpu_ms": 0,
+            "elapsed_sql_ms": 2,
+            "wall_sqlcmd_ms": 187.77
+          },
+          {
+            "leituras_logicas": 3,
+            "cpu_ms": 0,
+            "elapsed_sql_ms": 2,
+            "wall_sqlcmd_ms": 196.353
+          },
+          {
+            "leituras_logicas": 3,
+            "cpu_ms": 0,
+            "elapsed_sql_ms": 9,
+            "wall_sqlcmd_ms": 341.548
+          },
+          {
+            "leituras_logicas": 3,
+            "cpu_ms": 0,
+            "elapsed_sql_ms": 4,
+            "wall_sqlcmd_ms": 527.326
+          },
+          {
+            "leituras_logicas": 3,
+            "cpu_ms": 0,
+            "elapsed_sql_ms": 5,
+            "wall_sqlcmd_ms": 278.681
+          }
+        ],
+        "mediana_leituras_logicas": 3,
+        "mediana_cpu_ms": 0,
+        "mediana_elapsed_sql_ms": 4,
+        "mediana_wall_sqlcmd_ms": 278.681,
+        "operadores": [
+          "Compute Scalar",
+          "Concatenation",
+          "Constant Scan",
+          "Index Seek",
+          "Merge Interval",
+          "Nested Loops",
+          "Top"
+        ],
+        "indices_no_plano": [
+          "[IX_Tentativa_Conta_Data]"
+        ]
+      },
+      "Q2": {
+        "aquecimento": {
+          "leituras_logicas": 626,
+          "cpu_ms": 16,
+          "elapsed_sql_ms": 26,
+          "wall_sqlcmd_ms": 228.356
+        },
+        "amostras": [
+          {
+            "leituras_logicas": 626,
+            "cpu_ms": 0,
+            "elapsed_sql_ms": 29,
+            "wall_sqlcmd_ms": 238.125
+          },
+          {
+            "leituras_logicas": 626,
+            "cpu_ms": 0,
+            "elapsed_sql_ms": 45,
+            "wall_sqlcmd_ms": 967.969
+          },
+          {
+            "leituras_logicas": 626,
+            "cpu_ms": 16,
+            "elapsed_sql_ms": 31,
+            "wall_sqlcmd_ms": 257.289
+          },
+          {
+            "leituras_logicas": 626,
+            "cpu_ms": 0,
+            "elapsed_sql_ms": 21,
+            "wall_sqlcmd_ms": 219.179
+          },
+          {
+            "leituras_logicas": 626,
+            "cpu_ms": 0,
+            "elapsed_sql_ms": 26,
+            "wall_sqlcmd_ms": 252.52
+          }
+        ],
+        "mediana_leituras_logicas": 626,
+        "mediana_cpu_ms": 0,
+        "mediana_elapsed_sql_ms": 29,
+        "mediana_wall_sqlcmd_ms": 252.52,
+        "operadores": [
+          "Index Seek",
+          "Sort",
+          "Stream Aggregate"
+        ],
+        "indices_no_plano": [
+          "[IX_Tentativa_Conta_Data]"
+        ]
+      }
+    }
+  },
+  "scripts_sha256": {
+    "01_criacao_carga.sql": "ad56d47e740734e448cfa8df0c5790dc1f02421f5c3f4f0ef1f9830034fe2d66",
+    "02_permissoes.sql": "e664b5379bab71986d6a9fde7b71d577c7c62d08791a0bf0e0f9876c2164267b",
+    "03_testes_permissoes.sql": "db9968cd0ce45155bfc74b36cceac0b22a0a984c691377cc5ad9efcdf069bf45",
+    "04_volume_consultas.sql": "83199fbc3393d4017f7d06383b1b418941832a5bedfceff0337eed81e02c0aa4",
+    "05_indices.sql": "eef632cac782723a92f481bfeaae79e628cc5d2ce2cac7bc361e3409adae79b2"
+  }
+}

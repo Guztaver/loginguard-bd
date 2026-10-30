@@ -30,6 +30,8 @@ Cadastro de contas, autenticação com senha, bloqueio/desbloqueio, perfis Admin
 Em uma instância de laboratório SQL Server 2016 ou superior, execute os scripts numerados no SSMS, na ordem. O primeiro cria exclusivamente o banco `LoginGuardAcademico` e interrompe se ele já existir. Os scripts 04 e 05 são opcionais para o estudo de desempenho. Execute com uma conta de implantação autorizada; os usuários `demo_*` não possuem senha nem acesso de rede.
 
 ## Estado atual e entrega
-Este repositório contém a proposta e os scripts iniciais; o aplicativo de terminal e a autenticação ainda serão implementados. A carga deixa todas as contas bloqueadas e sem hash de senha: não são contas utilizáveis. Não foi possível executar os scripts nesta sessão porque o serviço SQL Express estava parado e o início do serviço foi negado pelo Windows. Não há evidência de base carregada ou de testes aprovados ainda.
+Em 30/10/2026, a base `LoginGuardAcademico` foi criada no SQL Server Express 2022 e carregada com 50 contas, 50 credenciais sem senha e 500 eventos iniciais. O experimento acrescentou 200 mil eventos, totalizando 200.500. Os testes de permissão e mascaramento passaram antes e depois dos índices. [Logs, planos reais e medições](evidencias/README.md) estão no repositório.
 
-Antes de entregar: executar e registrar os scripts. O repositório é privado; o professor precisará de acesso para consultar o link. Cada integrante precisa enviar sua própria entrega pelo canal da turma no prazo informado de 27/10. Não adicionar senhas, strings de conexão com segredo ou dados reais ao repositório.
+O aplicativo de terminal e a autenticação continuam previstos para o MVP. Todas as contas da carga estão bloqueadas e sem hash de senha: não são contas utilizáveis. A parte executável de BD foi validada.
+
+O repositório é privado; o professor precisará de acesso ao link. Cada integrante precisa enviar sua própria entrega pelo canal da turma. Não adicionar senhas, strings de conexão com segredo ou dados reais ao repositório.

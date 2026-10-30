@@ -230,6 +230,10 @@ if RESULTS:
          RESULTS['medicoes']['antes'][q]['mediana_elapsed_sql_ms'],
          RESULTS['medicoes']['depois'][q]['mediana_elapsed_sql_ms']) for q in ['Q1', 'Q2']
     ], [WIDTH-150, 75, 75])
+    add('Q1 melhorou em leituras e tempo. Q2 reduziu leituras, mas sua mediana de tempo aumentou de ' +
+        str(RESULTS['medicoes']['antes']['Q2']['mediana_elapsed_sql_ms']) + ' para ' +
+        str(RESULTS['medicoes']['depois']['Q2']['mediana_elapsed_sql_ms']) +
+        ' ms; não se declara ganho de velocidade para Q2. O plano de Q2 escolheu o índice por conta, não o filtrado.', 'small')
 else:
     table(['Evidência a coletar', 'Antes', 'Depois'], [
      ('Q1: leituras lógicas / mediana ms / plano', 'Pendente', 'Pendente'),

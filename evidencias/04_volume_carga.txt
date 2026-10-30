@@ -1,0 +1,6 @@
+Changed database context to 'LoginGuardAcademico'.
+
+(200000 rows affected)
+200500
+
+(1 rows affected)

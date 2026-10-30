@@ -1,0 +1,13 @@
+Changed database context to 'LoginGuardAcademico'.
+demo_suporte 1 pXXX@XXXX.com
+demo_suporte 2 pXXX@XXXX.com
+demo_suporte 3 pXXX@XXXX.com
+OK: SELECT em Credencial negado (229).
+OK: UPDATE em Conta negado (229).
+OK: alteração do papel negada.
+demo_auditor 1 1 2026-10-01 00:01:00 1
+demo_auditor 2 2 2026-10-01 00:02:00 1
+demo_auditor 3 3 2026-10-01 00:03:00 0
+OK: DELETE em histórico negado (229).
+OK: administrador também não lê hashes.
+Testes concluídos. Confira visualmente o mascaramento e arquive a saída.
