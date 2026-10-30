@@ -1,5 +1,6 @@
 from pathlib import Path
 import re
+import json
 import textwrap
 from xml.sax.saxutils import escape
 
@@ -13,6 +14,8 @@ from reportlab.lib.styles import ParagraphStyle
 from reportlab.platypus import SimpleDocTemplate, Paragraph, Spacer, Table, TableStyle, PageBreak, Flowable, Preformatted
 
 ROOT = Path(__file__).resolve().parents[1]
+RESULTS_FILE = ROOT / 'evidencias' / 'resumo.json'
+RESULTS = json.loads(RESULTS_FILE.read_text(encoding='utf-8')) if RESULTS_FILE.exists() else None
 OUT = ROOT / 'output' / 'pdf' / 'LoginGuard_Entrega_OAT_BD.pdf'
 OUT.parent.mkdir(parents=True, exist_ok=True)
 pdfmetrics.registerFont(TTFont('Arial', 'C:/Windows/Fonts/arial.ttf'))
@@ -136,7 +139,10 @@ add('Equipes de suporte precisam cadastrar contas, controlar bloqueios e investi
 heading('Escopo da versão mínima')
 add('Programa de terminal em Python conectado ao SQL Server, com cadastro, autenticação, bloqueio e desbloqueio, três perfis de operação e histórico de tentativas. O projeto gerencia contas de usuários do sistema. As identidades que se conectam ao banco formam uma camada separada de autorização.')
 add('O recorte corresponde à Parte comum e à Parte de Segurança. A interface será terminal e os dados operacionais serão totalmente fictícios. O MVP será desenvolvido em três semanas, conforme o canvas.')
-callout('Estado real da entrega', 'A proposta e os cinco scripts SQL estão no repositório. O aplicativo e a autenticação ainda serão implementados. A execução dos scripts e a carga do banco não foram comprovadas: o SQL Express local permanece parado. Os planos de teste deste documento não representam resultados já obtidos.')
+callout('Estado real da entrega',
+        'Base SQL Server criada e carregada: 50 contas, 50 credenciais sem senha e 500 eventos iniciais; após o experimento, 200.500 eventos. Os testes de permissão passaram e as consultas foram medidas antes e depois dos índices, com planos reais preservados. O aplicativo e a autenticação continuam previstos para as próximas semanas.'
+        if RESULTS else
+        'A proposta e os cinco scripts SQL estão no repositório. O aplicativo e a autenticação ainda serão implementados. A execução dos scripts e a carga do banco não foram comprovadas: o SQL Express local permanece parado. Os planos de teste deste documento não representam resultados já obtidos.')
 add('O repositório está privado. O professor precisa ter acesso para avaliar o código pelo link. Os scripts de criação/carga e de permissões também estão reproduzidos nos apêndices deste PDF.', 'small')
 
 page('Parte comum | Canvas de uma página', 'Canvas do projeto')
@@ -147,7 +153,7 @@ rows = [
  ('Maior risco', 'Leitura indevida de hashes ou alteração de contas por usuário sem permissão.'),
  ('Proteções', 'Papéis mínimos, DENY explícito, credenciais separadas, hash Argon2id e mascaramento de e-mail/IP.'),
  ('MVP em três semanas', 'Cadastro, login, bloqueio/desbloqueio, três perfis, histórico e duas consultas otimizadas.'),
- ('Dados e escala', 'Carga inicial prevista: 50 contas, 50 registros de credencial sem senha e 500 eventos fictícios. Experimento: mais 200 mil eventos.'),
+ ('Dados e escala', ('Carga inicial executada' if RESULTS else 'Carga inicial prevista') + ': 50 contas, 50 registros de credencial sem senha e 500 eventos fictícios. Experimento: mais 200 mil eventos.'),
  ('Como provar', 'Testes por papel e comparação de leituras lógicas, tempo e plano antes/depois dos índices.'),
 ]
 table(['Elemento', 'Definição'], rows, [112, WIDTH-112])
@@ -201,7 +207,7 @@ table(['Teste previsto', 'Resultado esperado'], [
  ('Auditor: DELETE em TentativaLogin', 'Erro de permissão; histórico preservado.'),
  ('Consulta autorizada pela view', 'Leitura funciona; e-mail aparece mascarado.'),
 ], [WIDTH/2, WIDTH/2])
-add('Executar sql/03_testes_permissoes.sql com EXECUTE AS USER e guardar a saída. Critério de aprovação: todas as operações proibidas são negadas e as permitidas funcionam. Testes ainda não executados.', 'small')
+add('O script sql/03_testes_permissoes.sql usa EXECUTE AS USER. Critério: operações proibidas são negadas e permitidas funcionam. ' + ('Testes executados e aprovados antes e depois do experimento; logs em evidencias/.' if RESULTS else 'Testes ainda não executados.'), 'small')
 add('Teste adicional planejado: usar uma entrada de SQL Injection no terminal e verificar que ela é tratada como dado por consultas parametrizadas. O serviço de autenticação terá identidade restrita própria. Não usar db_owner/sysadmin; donos dos objetos e sysadmin não ficam limitados por esses DENYs.', 'small')
 
 page('Parte de Segurança | Plano de otimização', 'Duas consultas sob volume')
@@ -214,11 +220,22 @@ add('O script 01 prevê 50 contas, 50 registros de credencial e 500 tentativas. 
 heading('Medição antes e depois')
 add('1. Executar a criação/carga e a carga adicional antes dos índices. Habilitar o plano de execução real no SSMS e SET STATISTICS IO, TIME ON.<br/>2. Executar uma rodada de aquecimento e cinco medições das duas consultas.<br/>3. Aplicar sql/05_indices.sql e repetir apenas as consultas com o mesmo volume e parâmetros.<br/>4. Comparar a mediana do tempo, leituras lógicas e plano de execução. Confirmar resultados equivalentes.')
 add('Não limpar cache global de instância compartilhada. Considerar o efeito de aquecimento e de estatísticas. Medir também o custo dos índices nas escritas e no armazenamento. As consultas são candidatas a gargalo; o experimento deverá comprovar se são lentas no equipamento.', 'small')
-table(['Evidência a coletar', 'Antes', 'Depois'], [
- ('Q1: leituras lógicas / mediana ms / plano', 'Pendente', 'Pendente'),
- ('Q2: leituras lógicas / mediana ms / plano', 'Pendente', 'Pendente'),
- ('Linhas por tabela e custo de carga', 'Pendente', 'Pendente'),
-], [WIDTH-150, 75, 75])
+if RESULTS:
+    table(['Medição executada', 'Antes', 'Depois'], [
+        (q + ': mediana de leituras lógicas',
+         RESULTS['medicoes']['antes'][q]['mediana_leituras_logicas'],
+         RESULTS['medicoes']['depois'][q]['mediana_leituras_logicas']) for q in ['Q1', 'Q2']
+    ] + [
+        (q + ': mediana de tempo SQL (ms)',
+         RESULTS['medicoes']['antes'][q]['mediana_elapsed_sql_ms'],
+         RESULTS['medicoes']['depois'][q]['mediana_elapsed_sql_ms']) for q in ['Q1', 'Q2']
+    ], [WIDTH-150, 75, 75])
+else:
+    table(['Evidência a coletar', 'Antes', 'Depois'], [
+     ('Q1: leituras lógicas / mediana ms / plano', 'Pendente', 'Pendente'),
+     ('Q2: leituras lógicas / mediana ms / plano', 'Pendente', 'Pendente'),
+     ('Linhas por tabela e custo de carga', 'Pendente', 'Pendente'),
+    ], [WIDTH-150, 75, 75])
 heading('Critério e cronograma')
 add('Meta: reduzir leituras lógicas sem alterar o resultado das consultas. Não declarar ganho percentual antes da medição.')
 table(['Semana', 'Resultado mínimo planejado'], [
@@ -235,13 +252,15 @@ table(['Exigência da atividade', 'Material e estado atual'], [
  ('Repositório e README', 'Repositório criado; README disponível no projeto.'),
  ('Modelo, campos e proteção', 'Página 3 e script 01.'),
  ('Três papéis com DENY', 'Página 4 e script 02.'),
- ('Ameaça e prova', 'Plano e script 03; execução pendente.'),
+ ('Ameaça e prova', 'Testes executados e aprovados; logs em evidencias/.' if RESULTS else 'Plano e script 03; execução pendente.'),
  ('Duas consultas e volume', 'Página 5; scripts 04 e 05.'),
- ('Base inicial carregada', 'PENDENTE: scripts disponíveis; carga não comprovada.'),
+ ('Base inicial carregada', 'EXECUTADO: 50 contas, 50 credenciais e 500 eventos iniciais.' if RESULTS else 'PENDENTE: scripts disponíveis; carga não comprovada.'),
 ], [170, WIDTH-170])
 heading('Preparação da base')
 add('Em uma instância de laboratório SQL Server, executar os scripts 01 e 02 no SSMS com uma identidade de implantação autorizada. O banco dedicado chama-se LoginGuardAcademico. O script 01 interrompe se ele já existir, sem sobrescrever dados. Depois executar o script 03 e guardar a saída.')
-add('Os scripts 04 e 05 suportam o experimento de desempenho. O programa de terminal ainda não foi implementado. Em 30/10/2026, a tentativa de conexão à instância local SQLEXPRESS falhou e o serviço foi encontrado parado. Não se afirma que a carga ou os testes passaram.', 'small')
+add('Os scripts 04 e 05 suportam o experimento de desempenho. O programa de terminal ainda não foi implementado. ' +
+    ('A carga e os testes de BD foram executados; os dados e as medições estão detalhados na página seguinte.' if RESULTS else
+     'Em 30/10/2026, a tentativa de conexão à instância local SQLEXPRESS falhou e o serviço foi encontrado parado. Não se afirma que a carga ou os testes passaram.'), 'small')
 heading('Repositório e envio')
 add(f'{link}<br/>Repositório privado: o professor deverá ter acesso para avaliar os arquivos. Cada participante deve fazer seu próprio envio. O prazo informado na atividade foi 27/10.', 'small')
 heading('Referências técnicas')
@@ -255,12 +274,34 @@ for title, url in refs:
     add(f'<link href="{url}" color="#007E87">{title}</link>', 'small')
 add('Apoio de IA: Codex na preparação da proposta, documentação e scripts iniciais. Todos os integrantes devem revisar e saber explicar cada parte do projeto.', 'small')
 
+if RESULTS:
+    page('Evidências executadas | Banco de dados', 'Resultados observados')
+    add('<b>Execução (UTC):</b> ' + escape(RESULTS['executado_em_utc']) +
+        '<br/><b>Banco:</b> ' + escape(RESULTS['banco']) +
+        '<br/><b>Versão / edição:</b> ' + escape(RESULTS['versao_edicao']), 'small')
+    table(['Verificação', 'Resultado'], [
+        ('Contas / credenciais / eventos iniciais', '50 / 50 / 500'),
+        ('Eventos após carga adicional', '200.500'),
+        ('Permissões e mascaramento', 'Aprovados antes e depois do experimento.'),
+        ('Resultados de Q1 e Q2', 'Idênticos nas duas fases.'),
+        ('Protocolo por consulta e fase', '1 aquecimento + 5 medições; mediana das cinco.'),
+    ], [190, WIDTH-190])
+    for q in ['Q1', 'Q2']:
+        heading(q + ' - planos reais')
+        for phase in ['antes', 'depois']:
+            measured = RESULTS['medicoes'][phase][q]
+            add('<b>' + phase.capitalize() + ':</b> ' + escape(', '.join(measured['operadores'])) +
+                '.<br/><b>Índices:</b> ' + escape(', '.join(measured['indices_no_plano'])), 'small')
+    heading('Como conferir')
+    add('O diretório evidencias/ preserva os logs SQL, os quatro arquivos .sqlplan com contadores reais, os resultados das consultas e o resumo.json. O resumo inclui o SHA-256 dos scripts executados. O validador é tools/executar_validacao.py.', 'small')
+    add('Tempos muito curtos podem ser arredondados a 0 ms pelo SQL Server; as leituras lógicas e os planos complementam a análise. O tempo total do sqlcmd inclui abertura de conexão e não equivale ao tempo exclusivo da consulta. Não foi limpo o cache global. Resultados restritos a este volume, distribuição de dados e equipamento.', 'small')
+
 for label, filename, title in [
     ('Apêndice A', '01_criacao_carga.sql', 'Script de criação e carga'),
     ('Apêndice B', '02_permissoes.sql', 'Papéis e permissões'),
 ]:
     page(label, title)
-    add(f'Fonte: sql/{filename}. Código disponibilizado, ainda sem validação de execução nesta entrega.', 'small')
+    add(f'Fonte: sql/{filename}. ' + ('Código executado; logs em evidencias/.' if RESULTS else 'Código disponibilizado, ainda sem validação de execução nesta entrega.'), 'small')
     raw = (ROOT / 'sql' / filename).read_text(encoding='utf-8')
     lines = []
     for line in raw.splitlines():

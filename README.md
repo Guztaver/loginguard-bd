@@ -24,6 +24,7 @@ Cadastro de contas, autenticação com senha, bloqueio/desbloqueio, perfis Admin
 - `sql/04_volume_consultas.sql`: carga adicional e duas consultas para medir antes da otimização.
 - `sql/05_indices.sql`: índices; repetir as consultas anteriores para comparar.
 - [Entrega da OAT em PDF](output/pdf/LoginGuard_Entrega_OAT_BD.pdf): identificação do grupo, canvas, parte de Segurança e apêndices SQL.
+- [Execução e coleta de evidências](docs/EXECUCAO.md): validador automatizado, sem apagar bancos ou limpar cache global.
 
 ## Como preparar a base
 Em uma instância de laboratório SQL Server 2016 ou superior, execute os scripts numerados no SSMS, na ordem. O primeiro cria exclusivamente o banco `LoginGuardAcademico` e interrompe se ele já existir. Os scripts 04 e 05 são opcionais para o estudo de desempenho. Execute com uma conta de implantação autorizada; os usuários `demo_*` não possuem senha nem acesso de rede.
