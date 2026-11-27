@@ -18,10 +18,14 @@ RESULTS_FILE = ROOT / 'evidencias' / 'resumo.json'
 RESULTS = json.loads(RESULTS_FILE.read_text(encoding='utf-8')) if RESULTS_FILE.exists() else None
 OUT = ROOT / 'output' / 'pdf' / 'LoginGuard_Entrega_OAT_BD.pdf'
 OUT.parent.mkdir(parents=True, exist_ok=True)
-FONT_DIR = Path('/usr/share/fonts/google-noto-vf')
-pdfmetrics.registerFont(TTFont('Arial', str(FONT_DIR / 'NotoSans[wght].ttf')))
-pdfmetrics.registerFont(TTFont('ArialBold', str(FONT_DIR / 'NotoSans[wght].ttf')))
-pdfmetrics.registerFont(TTFont('Consolas', str(FONT_DIR / 'NotoSansMono[wght].ttf')))
+FONT_CANDIDATES = [
+    (Path('C:/Windows/Fonts/arial.ttf'), Path('C:/Windows/Fonts/arialbd.ttf'), Path('C:/Windows/Fonts/consola.ttf')),
+    (Path('/usr/share/fonts/google-noto-vf/NotoSans[wght].ttf'), Path('/usr/share/fonts/google-noto-vf/NotoSans[wght].ttf'), Path('/usr/share/fonts/google-noto-vf/NotoSansMono[wght].ttf')),
+]
+FONT_REGULAR, FONT_BOLD, FONT_MONO = next((a, b, c) for a, b, c in FONT_CANDIDATES if a.exists() and b.exists() and c.exists())
+pdfmetrics.registerFont(TTFont('Arial', str(FONT_REGULAR)))
+pdfmetrics.registerFont(TTFont('ArialBold', str(FONT_BOLD)))
+pdfmetrics.registerFont(TTFont('Consolas', str(FONT_MONO)))
 pdfmetrics.registerFontFamily('Arial', normal='Arial', bold='ArialBold', italic='Arial', boldItalic='ArialBold')
 NAVY = colors.HexColor('#13334B')
 TEAL = colors.HexColor('#007E87')
@@ -31,6 +35,7 @@ WIDTH = A4[0] - 88
 styles = {
     'body': ParagraphStyle('body', fontName='Arial', fontSize=10, leading=14.1, textColor=INK, spaceAfter=8),
     'small': ParagraphStyle('small', fontName='Arial', fontSize=8.6, leading=11.5, textColor=INK, spaceAfter=6),
+    'report': ParagraphStyle('report', fontName='Arial', fontSize=9.4, leading=12.2, textColor=INK, spaceAfter=5),
     'cell': ParagraphStyle('cell', fontName='Arial', fontSize=8.4, leading=11, textColor=INK),
     'th': ParagraphStyle('th', fontName='ArialBold', fontSize=8.4, leading=11, textColor=colors.white),
     'h1': ParagraphStyle('h1', fontName='ArialBold', fontSize=23, leading=28, textColor=NAVY, spaceAfter=14),
@@ -281,15 +286,28 @@ add('Apoio de IA: Codex na preparação da proposta, documentação e scripts in
 
 page('Parte comum | Relatório de limitações', 'Limitações e próximos passos')
 heading('O que ainda não funciona')
-add('O repositório entrega o banco SQL Server, dados fictícios, papéis, testes de permissão, consultas de desempenho e documentação. O programa de terminal Python não foi implementado. Não há fluxo de cadastro/autenticação utilizável, verificação de senha com Argon2id, bloqueio operacional, nem registro de tentativas feito por uma aplicação. Todas as contas de demonstração permanecem bloqueadas e com HashSenha NULL; não podem ser usadas para entrar no sistema.')
-add('O teste de SQL Injection está planejado, mas não foi executado porque ainda não existe aplicação para receber a entrada maliciosa. As evidências de segurança provam permissões e mascaramento no SQL Server, incluindo DENY para operações escolhidas. Elas não demonstram a segurança de uma interface ou de uma identidade de serviço em produção.')
+add('O que foi entregue e validado é a camada de banco de dados: criação de esquema, carga fictícia, três papéis, permissões, negações explícitas, mascaramento dinâmico de e-mail, consultas de análise, índices e coleta de evidências. O programa de terminal Python ainda não foi implementado. Por isso, não existe fluxo funcional de cadastro ou autenticação, verificação de senha Argon2id, operação de bloqueio pela aplicação, nem escrita de eventos por uma identidade de serviço. Todas as contas demonstrativas permanecem bloqueadas e com HashSenha NULL; são dados de laboratório, não credenciais utilizáveis.', 'report')
+add('O ataque de SQL Injection está descrito como teste futuro, mas não foi executado: falta a aplicação que receberia a entrada hostil. Os testes existentes demonstram decisões de autorização do SQL Server por `EXECUTE AS USER`, não a segurança de uma camada de interface. A tabela TentativaLogin contém eventos sintéticos de sucesso/falha e os papéis autorizados podem consultá-la; ela não é ainda uma trilha completa de auditoria de operações. Não registra, a partir de uma aplicação, a identidade do operador, a ação realizada, o objeto afetado e o resultado de cada alteração.', 'report')
 heading('Riscos que restaram')
-add('A máscara de e-mail e IP reduz exposição em consultas comuns, mas não substitui autorização e pode permitir inferências. DENY não restringe sysadmin, proprietário do banco ou proprietário do objeto; por isso, funções de infraestrutura devem ficar separadas dos operadores. O hash Argon2id está especificado para a aplicação, mas ainda não foi exercitado ponta a ponta.')
-add('Os tempos de Q1 e Q2 são específicos do SQL Server Express 2022, do volume sintético de 200.500 eventos, dos filtros usados e do equipamento medido. Q2 reduziu leituras lógicas, mas teve mediana de tempo maior após a criação dos índices. Uma carga diferente ou concorrência pode mudar o plano e os tempos. O repositório é privado e o avaliador precisa receber acesso antes da correção.')
+add('No critério de proteção de dados sensíveis, o trabalho aplica mascaramento dinâmico e restringe o acesso com views e permissões; ainda falta implementar e testar uma segunda técnica especificamente entre RLS e criptografia. Não se apresenta `DENY SELECT` como se fosse RLS ou criptografia: é controle de autorização por objeto/coluna. A máscara reduz exposição em consultas comuns, mas não substitui autorização e pode permitir inferências. `DENY` também não limita sysadmin, proprietários do banco ou do objeto; funções de infraestrutura precisam permanecer separadas dos operadores.', 'report')
+add('Argon2id está especificado para a aplicação futura, mas não foi exercitado ponta a ponta e não é criptografia reversível do banco. Os resultados de desempenho são específicos do SQL Server Express 2022, do volume sintético de 200.500 eventos, dos filtros e do equipamento. Q1 caiu de 1.064 para 3 leituras lógicas e de 17 para 4 ms de mediana. Q2 caiu de 1.064 para 626 leituras, mas subiu de 24 para 29 ms. O experimento não permite prometer a mesma resposta sob outra carga ou concorrência; o cache global não foi limpo e os tempos são curtos.', 'report')
 heading('Próximos passos')
-add('1. Implementar o terminal com consultas parametrizadas e biblioteca Argon2id; criar uma identidade própria para o serviço, com acesso mínimo e TLS validado.<br/>2. Adicionar gravação de auditoria por rotinas restritas e verificar por perfil quais dados podem ser consultados e quais respostas são exibidas.<br/>3. Executar os testes de SQL Injection, autenticação e trilha de auditoria; registrar resultado, perfil e evidência reproduzível.<br/>4. Repetir desempenho com volumes e concorrência representativos, investigar o plano de Q2 e medir custo de escrita/armazenamento dos índices.<br/>5. Conceder ao professor acesso de leitura ao repositório privado e revisar a documentação com todos os componentes.')
+add('1. Implementar o terminal e as consultas parametrizadas; acrescentar hashing Argon2id, identidade de serviço de menor privilégio e TLS com validação do certificado.<br/>2. Definir o limite de acesso por linha que faça sentido ao cenário e implementar RLS com uma identidade de contexto confiável; testar casos permitidos e negados. Se o grupo escolher criptografia em vez de RLS, documentar gestão e rotação de chaves, separação de funções e comportamento da aplicação.<br/>3. Criar auditoria de operações com identificador confiável do ator, ação, entidade/registro, instante UTC e sucesso/falha; tornar o histórico somente acrescentável ao serviço e testá-lo por papel.<br/>4. Executar SQL Injection contra a aplicação implementada e provar que a entrada é tratada como valor; verificar também se respostas da aplicação não revelam dados mascarados ou protegidos.<br/>5. Repetir as medições em mais de um volume, estudar o plano de Q2 e medir custo de escrita e armazenamento dos índices; assegurar acesso da professora ao repositório privado.', 'report')
 heading('Contribuição individual — Gustavo Muniz dos Anjos')
-add('Modelei a estrutura e as permissões do banco SQL Server e preparei os scripts de criação, carga e testes por papel. Automatizei a validação e coletei evidências de acesso, mascaramento e desempenho. Documentei os resultados e consolidei a entrega em PDF. Esta declaração corresponde ao histórico de commits presente no repositório.', 'small')
+add('Modelei a estrutura e as permissões do banco SQL Server e preparei os scripts de criação e carga fictícia.<br/>Implementei os testes de autorização por papel e automatizei a validação da base.<br/>Coletei e organizei evidências de mascaramento, planos de execução e medições antes/depois dos índices.<br/>Documentei os resultados, as limitações e consolidei o PDF. A descrição corresponde ao histórico de commits no repositório.', 'small')
+
+page('Conferência da entrega | Estado por requisito', 'O que está comprovado')
+add('Esta tabela distingue evidência pronta de trabalho que permanece previsto. As pendências ficam visíveis para que o estado do projeto possa ser avaliado pelo que foi efetivamente executado.', 'body')
+table(['Requisito da Parte comum / Segurança', 'Estado nesta versão', 'Evidência ou limite'], [
+ ('README: problema, arquitetura, instalação/execução e estrutura', 'Atendido', 'README.md e docs/EXECUCAO.md; o repositório entrega o banco, não uma aplicação terminal.'),
+ ('Relatório de limitações e contribuição individual', 'Atendido', 'Seção anterior; contribuição baseada no histórico de commits.'),
+ ('Matriz de papéis e prova de permissões, com DENY justificado', 'Executado', 'Três papéis; logs em evidencias/03_testes_permissoes.txt e 06_testes_finais.txt.'),
+ ('Proteção de dado sensível: duas técnicas dentre mascaramento, RLS e criptografia', 'Parcial', 'Mascaramento dinâmico demonstrado. RLS/criptografia ainda não implementados; DENY não conta como uma dessas técnicas.'),
+ ('Duas consultas lentas, planos e tempos antes/depois', 'Executado com ressalva', 'Q1 melhora em leituras e tempo; Q2 reduz leituras, mas fica 5 ms mais lenta na mediana.'),
+ ('Ataque SQL Injection ou escalonamento de privilégio, com correção', 'Parcial', 'Escalonamento testado por permissões e negado; SQL Injection aguarda a aplicação.'),
+ ('Trilha de auditoria funcional: quem fez o quê', 'Pendente na aplicação', 'Há dados sintéticos de tentativas de login, não auditoria de ações administrativas com ator e operação.'),
+], [150, 93, WIDTH-243])
+callout('Escopo avaliado', 'Esta é a entrega de Segurança e Otimização de Banco de Dados. As partes de IA e de integração não se aplicam ao integrante que cursa somente BD; não foram incluídos resultados de IA, fine-tuning ou n8n.')
 
 if RESULTS:
     page('Evidências executadas | Banco de dados', 'Resultados observados')
