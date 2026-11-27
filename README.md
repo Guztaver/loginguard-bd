@@ -26,6 +26,24 @@ Cadastro de contas, autenticação com senha, bloqueio/desbloqueio, perfis Admin
 - [Entrega da OAT em PDF](output/pdf/LoginGuard_Entrega_OAT_BD.pdf): identificação do grupo, canvas, parte de Segurança e apêndices SQL.
 - [Execução e coleta de evidências](docs/EXECUCAO.md): validador automatizado, sem apagar bancos ou limpar cache global.
 
+## Instalação e execução
+
+Pré-requisitos do laboratório: SQL Server 2016 ou superior, SQL Server Management Studio (SSMS), `sqlcmd` e uma conta autorizada a criar o banco dedicado `LoginGuardAcademico`. Os scripts SQL não precisam de credenciais de aplicação: os usuários `demo_*` são identidades `WITHOUT LOGIN` usadas apenas com `EXECUTE AS USER`.
+
+1. Clone o repositório e confira que está usando uma instância de laboratório.
+2. No SSMS, execute `sql/01_criacao_carga.sql` e depois `sql/02_permissoes.sql`, `sql/03_testes_permissoes.sql`, na ordem.
+3. Para reproduzir a medição, execute `sql/04_volume_consultas.sql`, capture as consultas com plano real e estatísticas IO/TIME, aplique `sql/05_indices.sql` e repita as consultas. A carga e o protocolo de medição estão descritos em `docs/EXECUCAO.md`.
+
+O banco, os scripts e as evidências são a parte executável desta entrega. O programa de terminal Python ainda não foi implementado; portanto não há comando de inicialização de aplicação. Não rode novamente o script 01 sobre um banco existente: ele falha de propósito se `LoginGuardAcademico` já existir. Para detalhes sobre pré-requisitos e retomada segura do validador, consulte `docs/EXECUCAO.md`.
+
+## Estrutura do projeto
+
+- `sql/`: criação/carga fictícia, papéis, testes de permissão, consultas de volume e índices.
+- `evidencias/`: logs, amostras, resultados, planos reais `.sqlplan` e resumo das medições.
+- `docs/`: entrega detalhada, canvas e instruções de laboratório.
+- `tools/`: inicialização opcional do serviço local SQL Server, validador e gerador do PDF.
+- `output/pdf/`: PDF de entrega do grupo.
+
 ## Como preparar a base
 Em uma instância de laboratório SQL Server 2016 ou superior, execute os scripts numerados no SSMS, na ordem. O primeiro cria exclusivamente o banco `LoginGuardAcademico` e interrompe se ele já existir. Os scripts 04 e 05 são opcionais para o estudo de desempenho. Execute com uma conta de implantação autorizada; os usuários `demo_*` não possuem senha nem acesso de rede.
 

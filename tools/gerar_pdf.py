@@ -18,9 +18,10 @@ RESULTS_FILE = ROOT / 'evidencias' / 'resumo.json'
 RESULTS = json.loads(RESULTS_FILE.read_text(encoding='utf-8')) if RESULTS_FILE.exists() else None
 OUT = ROOT / 'output' / 'pdf' / 'LoginGuard_Entrega_OAT_BD.pdf'
 OUT.parent.mkdir(parents=True, exist_ok=True)
-pdfmetrics.registerFont(TTFont('Arial', 'C:/Windows/Fonts/arial.ttf'))
-pdfmetrics.registerFont(TTFont('ArialBold', 'C:/Windows/Fonts/arialbd.ttf'))
-pdfmetrics.registerFont(TTFont('Consolas', 'C:/Windows/Fonts/consola.ttf'))
+FONT_DIR = Path('/usr/share/fonts/google-noto-vf')
+pdfmetrics.registerFont(TTFont('Arial', str(FONT_DIR / 'NotoSans[wght].ttf')))
+pdfmetrics.registerFont(TTFont('ArialBold', str(FONT_DIR / 'NotoSans[wght].ttf')))
+pdfmetrics.registerFont(TTFont('Consolas', str(FONT_DIR / 'NotoSansMono[wght].ttf')))
 pdfmetrics.registerFontFamily('Arial', normal='Arial', bold='ArialBold', italic='Arial', boldItalic='ArialBold')
 NAVY = colors.HexColor('#13334B')
 TEAL = colors.HexColor('#007E87')
@@ -277,6 +278,18 @@ refs = [
 for title, url in refs:
     add(f'<link href="{url}" color="#007E87">{title}</link>', 'small')
 add('Apoio de IA: Codex na preparação da proposta, documentação e scripts iniciais. Todos os integrantes devem revisar e saber explicar cada parte do projeto.', 'small')
+
+page('Parte comum | Relatório de limitações', 'Limitações e próximos passos')
+heading('O que ainda não funciona')
+add('O repositório entrega o banco SQL Server, dados fictícios, papéis, testes de permissão, consultas de desempenho e documentação. O programa de terminal Python não foi implementado. Não há fluxo de cadastro/autenticação utilizável, verificação de senha com Argon2id, bloqueio operacional, nem registro de tentativas feito por uma aplicação. Todas as contas de demonstração permanecem bloqueadas e com HashSenha NULL; não podem ser usadas para entrar no sistema.')
+add('O teste de SQL Injection está planejado, mas não foi executado porque ainda não existe aplicação para receber a entrada maliciosa. As evidências de segurança provam permissões e mascaramento no SQL Server, incluindo DENY para operações escolhidas. Elas não demonstram a segurança de uma interface ou de uma identidade de serviço em produção.')
+heading('Riscos que restaram')
+add('A máscara de e-mail e IP reduz exposição em consultas comuns, mas não substitui autorização e pode permitir inferências. DENY não restringe sysadmin, proprietário do banco ou proprietário do objeto; por isso, funções de infraestrutura devem ficar separadas dos operadores. O hash Argon2id está especificado para a aplicação, mas ainda não foi exercitado ponta a ponta.')
+add('Os tempos de Q1 e Q2 são específicos do SQL Server Express 2022, do volume sintético de 200.500 eventos, dos filtros usados e do equipamento medido. Q2 reduziu leituras lógicas, mas teve mediana de tempo maior após a criação dos índices. Uma carga diferente ou concorrência pode mudar o plano e os tempos. O repositório é privado e o avaliador precisa receber acesso antes da correção.')
+heading('Próximos passos')
+add('1. Implementar o terminal com consultas parametrizadas e biblioteca Argon2id; criar uma identidade própria para o serviço, com acesso mínimo e TLS validado.<br/>2. Adicionar gravação de auditoria por rotinas restritas e verificar por perfil quais dados podem ser consultados e quais respostas são exibidas.<br/>3. Executar os testes de SQL Injection, autenticação e trilha de auditoria; registrar resultado, perfil e evidência reproduzível.<br/>4. Repetir desempenho com volumes e concorrência representativos, investigar o plano de Q2 e medir custo de escrita/armazenamento dos índices.<br/>5. Conceder ao professor acesso de leitura ao repositório privado e revisar a documentação com todos os componentes.')
+heading('Contribuição individual — Gustavo Muniz dos Anjos')
+add('Modelei a estrutura e as permissões do banco SQL Server e preparei os scripts de criação, carga e testes por papel. Automatizei a validação e coletei evidências de acesso, mascaramento e desempenho. Documentei os resultados e consolidei a entrega em PDF. Esta declaração corresponde ao histórico de commits presente no repositório.', 'small')
 
 if RESULTS:
     page('Evidências executadas | Banco de dados', 'Resultados observados')
