@@ -52,4 +52,4 @@ Em 30/10/2026, a base `LoginGuardAcademico` foi criada no SQL Server Express 202
 
 O aplicativo de terminal e a autenticação continuam previstos para o MVP. Todas as contas da carga estão bloqueadas e sem hash de senha: não são contas utilizáveis. A parte executável de BD foi validada.
 
-O repositório é privado; o professor precisará de acesso ao link. Cada integrante precisa enviar sua própria entrega pelo canal da turma. Não adicionar senhas, strings de conexão com segredo ou dados reais ao repositório.
+O repositório está público e pode ser acessado pelo link acima. Cada integrante precisa enviar sua própria entrega pelo canal combinado em sala até 27/11/2026, às 23h59. Não adicionar senhas, strings de conexão com segredo ou dados reais ao repositório.

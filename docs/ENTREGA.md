@@ -7,7 +7,7 @@
 - Filipe Alves Ferreira Rocha - matrícula 222700092.
 - Gustavo Muniz dos Anjos - matrícula 241070612.  
 **Disciplina:** Segurança e Otimização de Banco de Dados.  
-**Repositório:** https://github.com/Guztaver/loginguard-bd (privado; requer acesso para avaliação).
+**Repositório:** https://github.com/Guztaver/loginguard-bd (público).
 
 ## 1. Problema e escopo
 O projeto atende uma equipe de suporte que precisa cadastrar contas, controlar bloqueios e investigar acessos. Quando funcionar, o administrador poderá gerenciar as contas, o suporte acompanhará sua situação e o auditor consultará os eventos sem modificar o histórico.
@@ -104,7 +104,7 @@ Q1 melhorou tanto em leituras quanto em tempo. Q2 teve menos leituras, mas a med
 ## 7. Cronograma e pendências reais
 **Semana 1:** executar criação/carga, validar os três papéis e registrar o modelo. **Semana 2:** implementar terminal, Argon2id e acesso parametrizado, com gravação restrita de tentativas. **Semana 3:** executar ataques de teste, medir consultas e consolidar documentação.
 
-Em 30/10/2026, após autorização do usuário e confirmação administrativa do Windows, foi iniciado o serviço SQL Server já instalado. A base inicial foi criada e carregada, o volume foi gerado, os testes de segurança passaram e os índices e consultas foram executados. Não foi necessário concluir nenhuma instalação adicional nem reiniciar o computador. O terminal e a autenticação são componentes futuros do MVP, não requisitos executados nesta entrega inicial de BD. Garantir acesso do professor ao repositório privado antes do envio individual. O prazo informado na atividade foi 27/10.
+Em 30/10/2026, após autorização do usuário e confirmação administrativa do Windows, foi iniciado o serviço SQL Server já instalado. A base inicial foi criada e carregada, o volume foi gerado, os testes de segurança passaram e os índices e consultas foram executados. Não foi necessário concluir nenhuma instalação adicional nem reiniciar o computador. O terminal e a autenticação são componentes futuros do MVP, não requisitos executados nesta entrega inicial de BD. A atividade informa prazo até 27/11/2026, às 23h59; cada integrante deve fazer seu envio individual pelo canal combinado em sala.
 
 ## Referências técnicas
 - [Microsoft — DENY](https://learn.microsoft.com/en-us/sql/t-sql/statements/deny-transact-sql): regras e exceções de permissões.
